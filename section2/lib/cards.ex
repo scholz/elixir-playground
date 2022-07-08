@@ -1,5 +1,12 @@
 defmodule Cards do
+	@moduledoc """
+	  Provides methods for creating and handling a deck of cards
+	"""
 
+
+	@doc """
+	  Returns a list of strings representing a deck of cards
+	"""
 	def create_deck do
 		values = ["Ace", "King", "Queen", "Five", "Four"]
 		suits = ["Spades", "Diamonds", "Hearts", "Clubs" ]
@@ -10,6 +17,14 @@ defmodule Cards do
 
 	end
 
+	@doc """
+	  Returns shuffled deck
+
+	  ## Examples
+			iex> deck = Cards.create_deck
+			iex> shuffle(deck)
+
+	"""
 	def shuffle(deck) do
 		Enum.shuffle(deck)
 	end
@@ -18,16 +33,21 @@ defmodule Cards do
 		Enum.member?(deck, card)
 	end
 
-	def deal(deck, hand) do
-		Enum.split(deck, hand)
+	def deal(deck, hand_size) do
+		Enum.split(deck, hand_size)
 	end
 
 	def load(filename) do
-		{status, binary} = File.read(filename)
 		case File.read(filename) do
 			{:ok, binary} -> :erlang.binary_to_term binary
-			{:error, _reason} -> "That file does not exist #{_reason}"
+			{:error, reason} -> "Error loading file. Reason: #{reason}"
 		end
+	end
+
+	def generate_hand(hand_size) do
+		Cards.create_deck
+		|> Cards.shuffle
+		|> Cards.deal(hand_size)
 	end
 
 
